@@ -1,241 +1,91 @@
-# AI_Phone_Detector
-AI PHONE DETECTOR (RTSP STREAM)
-╔══════════════════════════════════════════════════════════════╗
-║  AI PHONE DETECTOR PRO v3.0 - ANALOG EDITION                 ║
-║  QUICK START GUIDE                                           ║
-╚══════════════════════════════════════════════════════════════╝
+# AI Phone Detector Pro - macOS Apple Silicon
 
-═══════════════════════════════════════════════════════════════
- INSTALLATION (2 DATEIEN)
-═══════════════════════════════════════════════════════════════
+Real-time phone detection for live streams and cameras, built specifically for Apple Silicon Macs. This edition targets Apple Metal through PyTorch MPS and intentionally keeps Windows/CUDA code out of the macOS path.
 
-1. Doppelklick: INSTALL_SMART.bat
-2. Warten bis fertig (10-15 Minuten)
-3. Programm startet automatisch!
+## Features
 
-Danach nur noch START.bat benutzen!
+- Apple Silicon only: M1, M2, M3, M4 and newer
+- Metal/MPS acceleration for YOLOv8 inference
+- RTSP, HTTP/HLS, YouTube, Twitch and TikTok stream input
+- Twitch extraction through Streamlink with yt-dlp fallback
+- PyQt6 desktop interface with live preview and detection stats
+- Person and cell-phone detection with alert levels
+- Optional Core ML export helper for Neural Engine experiments
 
+## Apple Neural Engine
 
-═══════════════════════════════════════════════════════════════
- GPU SUPPORT (RTX 3060/3070/3080/3090/4000)
-═══════════════════════════════════════════════════════════════
+The live app uses PyTorch MPS, which runs on Apple GPU cores through Metal. That is the practical real-time path for YOLO in Python.
 
-⚠️ WICHTIG für GPU-Beschleunigung:
+The Apple Neural Engine is not directly exposed to PyTorch. To use ANE, export the YOLO model to Core ML and run it through a dedicated Core ML inference pipeline. This release includes `export_coreml_model.py` as a starting point, but live detection currently uses MPS for reliability.
 
-Problem: Python 3.14 hat KEINE CUDA-Unterstützung!
-Lösung: Python 3.11 oder 3.12 verwenden
+## Requirements
 
-SCHRITTE FÜR GPU-SUPPORT:
---------------------------
-1. Python 3.12 herunterladen:
-   https://www.python.org/downloads/release/python-3120/
-   
-2. Installieren (WICHTIG: "Add to PATH" anhaken!)
+- Apple Silicon Mac, arm64 only
+- macOS with Metal/MPS support
+- Python 3.11 or 3.12 arm64
+- Internet connection on first model download
 
-3. Alte venv löschen:
-   - Ordner "venv" löschen
-   
-4. INSTALL_SMART.bat neu ausführen
+## Install
 
-5. GPU wird automatisch erkannt!
+```bash
+git clone <your-repo-url>
+cd <your-repo-folder>
+chmod +x INSTALL_MAC.sh
+./INSTALL_MAC.sh
+```
 
+The installer creates a local `venv/`, installs dependencies, checks MPS, and generates `START_MAC.sh`.
 
-TESTEN OB GPU FUNKTIONIERT:
----------------------------
-Im Programm unter "SYSTEM STATUS" sollte stehen:
-✓ GPU OPERATIONAL
-✓ DEVICE: NVIDIA GeForce RTX 3060
-✓ CUDA: 12.1
+## Run
 
+```bash
+./START_MAC.sh
+```
 
-═══════════════════════════════════════════════════════════════
- OHNE GPU (CPU MODE)
-═══════════════════════════════════════════════════════════════
+On first run, Ultralytics may download the selected YOLO model, for example `yolov8s.pt`. Model files are ignored by Git and should not be committed.
 
-Funktioniert auch ohne GPU!
-✓ Alles läuft (nur langsamer)
-✓ 5-10 FPS statt 30+ FPS
-✓ Empfohlen: "Nano" oder "Small" Model
+## Twitch Notes
 
+Use a channel URL like:
 
-═══════════════════════════════════════════════════════════════
- STREAM-TYPEN
-═══════════════════════════════════════════════════════════════
-
-RTSP KAMERA:
-rtsp://admin:password@192.168.1.100:554/stream
-
-YOUTUBE LIVE:
-https://www.youtube.com/watch?v=XXXXXXX
-
-TWITCH:
+```text
 https://www.twitch.tv/channelname
+```
 
+If Twitch extraction fails, update the stream extractors:
 
-═══════════════════════════════════════════════════════════════
- MODEL-AUSWAHL (Geschwindigkeit vs. Genauigkeit)
-═══════════════════════════════════════════════════════════════
+```bash
+source venv/bin/activate
+python -m pip install -U streamlink yt-dlp
+```
 
-NANO (Schnellste)
-├─ FPS: 30-60 (GPU) / 8-12 (CPU)
-├─ VRAM: 2 GB
-└─ Genauigkeit: 85%
+## Recommended Models
 
-SMALL (Balanced)
-├─ FPS: 20-40 (GPU) / 5-8 (CPU)
-├─ VRAM: 3 GB
-└─ Genauigkeit: 90%
+- MacBook Air M1/M2: Nano or Small
+- MacBook Pro M1 Pro/M2 Pro/M3 Pro: Small or Medium
+- M1 Max/M2 Max/M3 Max/Ultra: Medium or Large
 
-MEDIUM (Empfohlen!) ⭐
-├─ FPS: 15-30 (GPU) / 3-5 (CPU)
-├─ VRAM: 5 GB
-└─ Genauigkeit: 95%
+## Core ML Export
 
-LARGE (Beste Erkennung)
-├─ FPS: 10-20 (GPU) / 2-4 (CPU)
-├─ VRAM: 8 GB
-└─ Genauigkeit: 98%
+```bash
+source venv/bin/activate
+python export_coreml_model.py --model yolov8n.pt
+```
 
+This creates a Core ML package next to the YOLO model. Integrating that package into live detection requires a separate Core ML runtime path.
 
-═══════════════════════════════════════════════════════════════
- FEATURES
-═══════════════════════════════════════════════════════════════
+## Repository Hygiene
 
-✓ Person Detection
-✓ Phone Detection (sehr genau!)
-✓ 3 Alert-Level (Critical/High/Medium)
-✓ YouTube/Twitch Support
-✓ RTSP Camera Support
-✓ GPU Acceleration (RTX)
-✓ Retro Analog CRT Look
-✓ Echtzeit FPS Counter
-✓ Multi-Model Support
+Do not commit:
 
+- `venv/`
+- `START_MAC.sh`
+- `yolov8*.pt`
+- `.mlpackage/` exports
+- captured videos or alert screenshots
 
-═══════════════════════════════════════════════════════════════
- ALERT-LEVEL
-═══════════════════════════════════════════════════════════════
+These are already covered by `.gitignore`.
 
-🔴 CRITICAL (Rot)
-   └─ Handy auf Kopfhöhe = Aktive Nutzung
+## License
 
-🟠 HIGH (Orange)
-   └─ Handy auf Brusthöhe = Verdächtig
-
-🟡 MEDIUM (Gelb)
-   └─ Handy im Schoß = Mögliche Nutzung
-
-
-═══════════════════════════════════════════════════════════════
- PERFORMANCE MIT RTX 3060
-═══════════════════════════════════════════════════════════════
-
-Model: MEDIUM
-├─ FPS: 20-30
-├─ VRAM: 5-7 GB
-├─ CPU: 15-20%
-└─ Genauigkeit: 95%+
-
-Model: NANO
-├─ FPS: 40-60
-├─ VRAM: 2-3 GB
-├─ CPU: 10%
-└─ Genauigkeit: 85%
-
-
-═══════════════════════════════════════════════════════════════
- TROUBLESHOOTING
-═══════════════════════════════════════════════════════════════
-
-Problem: "Module not found"
-├─ Lösung: INSTALL_SMART.bat nochmal ausführen
-
-Problem: "GPU not detected"
-├─ Lösung 1: Python 3.12 installieren (nicht 3.14!)
-├─ Lösung 2: NVIDIA Treiber updaten
-└─ Lösung 3: CPU Mode nutzen (funktioniert auch)
-
-Problem: "Stream connection failed"
-├─ Lösung 1: RTSP URL prüfen
-├─ Lösung 2: Kamera IP pingen
-├─ Lösung 3: YouTube URL testen in Browser
-└─ Lösung 4: yt-dlp installieren: pip install yt-dlp
-
-Problem: "Low FPS"
-├─ Lösung 1: Kleineres Model wählen (Nano/Small)
-├─ Lösung 2: GPU aktivieren
-└─ Lösung 3: Stream-Auflösung reduzieren
-
-
-═══════════════════════════════════════════════════════════════
- ANALOG CRT EFFEKT
-═══════════════════════════════════════════════════════════════
-
-✓ Grüner Terminal-Look (wie alte Monitoren)
-✓ Scanlines
-✓ CRT Vignette
-✓ Retro Font
-✓ Kann deaktiviert werden (Checkbox)
-
-
-═══════════════════════════════════════════════════════════════
- SYSTEM-ANFORDERUNGEN
-═══════════════════════════════════════════════════════════════
-
-MINIMAL:
-├─ Windows 10/11 64-bit
-├─ Python 3.11-3.14
-├─ 8 GB RAM
-├─ CPU: i5 / Ryzen 5
-└─ Speicher: 10 GB
-
-EMPFOHLEN FÜR GPU:
-├─ Windows 10/11 64-bit
-├─ Python 3.11 oder 3.12 (NICHT 3.14!)
-├─ 16 GB RAM
-├─ NVIDIA RTX 3060+ (12 GB VRAM)
-├─ NVIDIA Treiber: Aktuell
-└─ Speicher: 15 GB SSD
-
-
-═══════════════════════════════════════════════════════════════
- NÄCHSTE SCHRITTE
-═══════════════════════════════════════════════════════════════
-
-1. INSTALL_SMART.bat ausführen
-2. System Status prüfen (GPU erkannt?)
-3. Stream-URL eingeben
-4. Model wählen (Medium empfohlen)
-5. "INITIATE DETECTION" klicken
-6. Fertig! 🚀
-
-
-═══════════════════════════════════════════════════════════════
- SUPPORT
-═══════════════════════════════════════════════════════════════
-
-Version: 3.0 ANALOG EDITION
-Author: Nanda NW
-License: Educational Use
-
-Bei Problemen:
-└─ Check System Log im Programm
-
-
-═══════════════════════════════════════════════════════════════
- WICHTIG - GPU ZUSAMMENFASSUNG
-═══════════════════════════════════════════════════════════════
-
-Für RTX 3060 or up GPU-Support:
-1. Python 3.12 installieren (NICHT 3.14!)
-2. venv Ordner löschen
-3. INSTALL_SMART.bat neu ausführen
-4. GPU wird automatisch erkannt!
-
-Python 3.14 = Nur CPU (funktioniert aber!)
-Python 3.12 = GPU Support (schneller!)
-
-
-═══════════════════════════════════════════════════════════════
-
-Viel Erfolg! 🚀
+MIT License. See `LICENSE`.

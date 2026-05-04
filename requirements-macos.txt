@@ -1,0 +1,10 @@
+torch
+torchvision
+torchaudio
+ultralytics
+opencv-python
+PyQt6
+numpy
+yt-dlp
+streamlink
+coremltools

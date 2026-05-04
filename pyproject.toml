@@ -1,0 +1,22 @@
+[project]
+name = "ai-phone-detector-macos"
+version = "4.1.0"
+description = "Apple Silicon macOS phone detector using YOLOv8 and PyTorch Metal/MPS."
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = "MIT"
+authors = [
+  { name = "AI Camera Solutions" }
+]
+dependencies = [
+  "torch",
+  "torchvision",
+  "torchaudio",
+  "ultralytics",
+  "opencv-python",
+  "PyQt6",
+  "numpy",
+  "yt-dlp",
+  "streamlink",
+  "coremltools"
+]
