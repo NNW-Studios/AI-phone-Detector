@@ -1,6 +1,8 @@
 # Contributing
 
-This project is intentionally focused on Apple Silicon macOS.
+This project is intentionally focused on Apple Silicon macOS. 
+
+For windows Version go to github.com/NNW-Studios/AI-phone-Detector/releases/tag/ai
 
 ## Local Setup
 
