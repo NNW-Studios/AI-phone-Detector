@@ -4,7 +4,7 @@ Real-time phone detection for live streams and cameras, built specifically for A
 
 ## Features
 
-- Apple Silicon only: M1, M2, M3, M4 and newer
+- Apple Silicon only: M1, M2, M3, M4 M5 and newer
 - Metal/MPS acceleration for YOLOv8 inference
 - RTSP, HTTP/HLS, YouTube, Twitch and TikTok stream input
 - Twitch extraction through Streamlink with yt-dlp fallback
