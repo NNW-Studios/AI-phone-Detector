@@ -28,7 +28,7 @@ The Apple Neural Engine is not directly exposed to PyTorch. To use ANE, export t
 ## Install
 
 ```bash
-git clone <your-repo-url>
+git clone github.com/NNW-Studios/AI-phone-Detector
 cd <your-repo-folder>
 chmod +x INSTALL_MAC.sh
 ./INSTALL_MAC.sh
@@ -63,7 +63,7 @@ python -m pip install -U streamlink yt-dlp
 
 - MacBook Air M1/M2: Nano or Small
 - MacBook Pro M1 Pro/M2 Pro/M3 Pro: Small or Medium
-- M1 Max/M2 Max/M3 Max/Ultra: Medium or Large
+- M1 Max/M2 Max/M3 Max/Ultra/M4/M5: Medium or Large
 
 ## Core ML Export
 
@@ -74,18 +74,7 @@ python export_coreml_model.py --model yolov8n.pt
 
 This creates a Core ML package next to the YOLO model. Integrating that package into live detection requires a separate Core ML runtime path.
 
-## Repository Hygiene
 
-Do not commit:
-
-- `venv/`
-- `START_MAC.sh`
-- `yolov8*.pt`
-- `.mlpackage/` exports
-- captured videos or alert screenshots
-
-These are already covered by `.gitignore`.
-
-## License
+ License
 
 MIT License. See `LICENSE`.
